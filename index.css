@@ -1,0 +1,159 @@
+/* root has the highest selectivity and most powerful tag like <html>... also variables used in root become global and can be accessed anywhere */
+/* var(--bg) var fun is used to fetch custom properties and used with properties created inside :root */
+/* ( * : star is universal selector means it is applied to all the elements of the html */
+
+
+:root{
+    --bg:#0b0f14; 
+    --card:#0f1720; 
+    --muted:#9aa4b2; 
+    --accent:#6ee7b7; 
+    --glass: rgba(255, 255, 255, 0.03);
+    color-scheme: dark;
+}
+*{
+    /* by this the specified width and height won't change 
+    therefore it is suggested to start with this rule*/
+    box-sizing:border-box;
+}
+body{
+    /* we use two fonts for backup...2nd one is generic font */
+    font-family:"Space Mono",monospace;
+    /* to remove default margin */
+    margin:0;
+    /* for smooth transition of colors 180 means top to bottom */
+    background:linear-gradient(180deg,#0e1d45 0%,#0b1220 100%);
+    color:#e6eef6;
+    /* min-height:100vh; */
+    padding:24px;
+}
+.container{
+    max-width:1100px;
+    margin:0;
+    background:transparent;
+}
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    /* 16px below every element */
+    margin-bottom:16px;
+}
+.title{
+    margin:0;
+    font-size:26px;
+}
+.controls{
+    display:flex;
+    /* to give gap btw two items */
+    gap:8px;
+    align-items:center;
+}
+.switch{
+    position:relative;
+    display:inline-block;
+    width:40px;
+    height:22px;
+}
+.slider{
+    position:absolute;
+    cursor:pointer;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#2b3946;
+    border-radius:999px;
+}
+.slider:before{
+    position:absolute;
+    content:"";
+    height:18px;
+    width:18px;
+    left:2px;
+    top:2px;
+    background:white;
+    border-radius:50%;
+    transition:0.2s;
+}
+.switch input:checked+.slider{
+    background:linear-gradient(90deg,#06b6d4,#06b6d4);
+}
+.switch input:checked + .slider:before{
+    transform:translateX(18px);
+}
+.searchSection{
+    background:rgba(255, 255, 255, 0.02);
+    padding:16px;
+    border-radius:10px;
+    /*meee border:3px black solid; */
+    margin-bottom:12px;
+}
+.searchRow{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+input[type="text"],input[type="password"]{
+    background:#071221;
+    border:1px solid rgba(255,255,255,0.04);
+    padding:10px;
+    border-radius:8px;
+    color:#e6eef6;
+}
+.Btn{
+    background: linear-gradient(90deg,#16a34a,#06b6d4);
+    color:black;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+}
+.Btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 10px #06b6d4;
+}
+.secondaryBtn{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--muted);
+}
+.muted{
+    color:var(--muted);
+    font-size:13px;
+}
+.results{
+    /* grid--it represent div in the form of row and column ex-6 div in form or 2 rows and 3 col */
+    display:grid;
+    /* 360px will be taken by 1st col and 1fr means 1 fraction of leftover by 2nd */
+    grid-template-columns:360px 1fr;
+    margin-top:12px;
+    gap:12px
+}
+.profileArea{
+    background:var(--card);
+    padding:12px;
+    border-radius:10px;
+    /* it can't shrink but can enlarge if content increases */
+    min-height:200px;
+}
+.analytics{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+.chartCard{
+    background:var(--card);
+    padding:12px;
+    border-radius:10px;
+}
+.reposSection{
+    margin-top:12px;
+}
+.repoList{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+
