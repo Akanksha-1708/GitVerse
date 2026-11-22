@@ -31,7 +31,7 @@ class CacheService:
             return None
         return None
 
-    async def set(self,key:str,value:Any,ttl:int=settings.CACHE__TTL_SECONDS):
+    async def set(self,key:str,value:Any,ttl:int=settings.CACHE_TTL_SECONDS):
         if not self.client:
             return
         try:
