@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python virtual environment & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Next.js build
+.next/
+out/
+build/
+dist/
+
+# Environment variables (NEVER COMMIT REAL SECRETS)
+.env
+.env.local
+.env.production
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Redis dump
+dump.rdb
