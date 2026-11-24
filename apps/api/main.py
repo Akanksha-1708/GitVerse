@@ -1,5 +1,6 @@
 import time
 from fastapi import FastAPI, HTTPException, Request
+from services.github_service import github_service
 from fastapi.middleware.cors import CORSMiddleware
 from config.settings import settings
 
@@ -34,3 +35,24 @@ async def health_check():
         "env": settings.ENVIRONMENT
     }
 
+@app.get("api/developer/{username}")
+async def get_developer_metrics(username: str):
+    try:
+        data=await github_service.calculate_developer_analytics(username)
+        return {"success": True, "data":data}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch GitHub data: {str(e)}")
+
+@app.get("/api/compare/{user1}/{user2}")
+async def compare_developers(user1: str, user2: str):
+    try:
+        import asyncio
+        d1, d2 = await asyncio.gather(
+            github_service.calculate_developer_analytics(user1),
+            github_service.calculate_developer_analytics(user2)
+        )
+        return {"success": True, "developer1": d1, "developer2": d2}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
