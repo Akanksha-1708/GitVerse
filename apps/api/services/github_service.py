@@ -44,3 +44,66 @@ class GitHubService:
 
         await cache.set(cache_key,repos,ttl=3600)
         return repos
+
+    async def calculate_developer_analytics(self,username:str)->Dict[str,Any]:
+        cache_key=f"gh:analytics:{username.lower()}"
+        cached=await cache.get(cache_key)
+        if cached:
+            cached["_from_cache"]-True
+            return cached
+
+        user,repos=await asyncio.gather(
+            self.get_user_profile(username),
+            self.get_user_repos(username)
+        )
+
+        total_stars=sum(r.get("stargazers_count",0) for r in repos)
+        total_forks=sum(r.get("forks_count",0) for r in repos)
+
+        # primary language frequency breakdown
+        lang_counts:Dict[str,int]={}
+        for r in repos:
+            lang=r.get("langguage")
+            if lang:
+                lang_counts[lang]=lang_counts.get(lang,0)+1
+
+        # Top 6 repositories sorted by stars
+        top_repos=sorted(repos,key=lambda x:x.get("stargazers_count",0), reverse=True)[:6]
+        analytics={
+            "username": username,
+            "_from_cache": False,
+            "profile": {
+                "name": user.get("name") or user.get("login"),
+                "login": user.get("login"),
+                "avatar_url": user.get("avatar_url"),
+                "bio": user.get("bio"),
+                "location": user.get("location"),
+                "blog": user.get("blog"),
+                "html_url": user.get("html_url"),
+                "created_at": user.get("created_at")
+            },
+            "metrics": {
+                "total_repos": len(repos),
+                "total_stars": total_stars,
+                "total_forks": total_forks,
+                "followers": user.get("followers", 0),
+                "following": user.get("following", 0)
+            },
+            "languages": lang_counts,
+            "top_repositories": [
+                {
+                    "name": r["name"],
+                    "description": r.get("description"),
+                    "stars": r.get("stargazers_count", 0),
+                    "forks": r.get("forks_count", 0),
+                    "language": r.get("language"),
+                    "html_url": r["html_url"],
+                    "updated_at": r["updated_at"]
+                }
+                for r in top_repos
+            ]
+        }
+        await cache.set(cache_key,analytics,ttl=1800)
+        return analytics
+    
+github_service = GitHubService()
