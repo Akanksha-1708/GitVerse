@@ -5,11 +5,11 @@ from services.cache_service import cache
 import asyncio
 
 class GitHubService:
-    BSE_URL="https://api.github.com"
+    BASE_URL="https://api.github.com"
     def _headers(self)->Dict[str,str]:
         headers={"Accept":"application/vnd.github.v3+json"}
         if settings.GITHUB_TOKEN:
-            headers["Authorization"]=f"Bearer {settings.GTIHUB_TOKEN}"
+            headers["Authorization"]=f"Bearer {settings.GITHUB_TOKEN}"
         return headers
 
     async def get_user_profile(self,username:str)->Dict[str,Any]:
@@ -49,7 +49,7 @@ class GitHubService:
         cache_key=f"gh:analytics:{username.lower()}"
         cached=await cache.get(cache_key)
         if cached:
-            cached["_from_cache"]-True
+            cached["_from_cache"]=True
             return cached
 
         user,repos=await asyncio.gather(
@@ -63,7 +63,7 @@ class GitHubService:
         # primary language frequency breakdown
         lang_counts:Dict[str,int]={}
         for r in repos:
-            lang=r.get("langguage")
+            lang=r.get("language")
             if lang:
                 lang_counts[lang]=lang_counts.get(lang,0)+1
 

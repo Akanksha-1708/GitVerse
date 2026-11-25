@@ -21,9 +21,9 @@ app.add_middleware(
 # Middleware: adds exact latency header to prove sub-100ms caching in resume
 @app.middleware("http")
 async def add_process_time_header(request:Request, call_next):
-    start_time=time.pref_counter()
+    start_time=time.perf_counter()
     response=await call_next(request)
-    process_time=(time.pref_counter()-start_time)*1000  # i milliseconds
+    process_time=(time.perf_counter()-start_time)*1000  # i milliseconds
     response.headers["X-Response-Time-Ms"]=f"{ process_time:.2f}"
     return response
 
@@ -35,7 +35,7 @@ async def health_check():
         "env": settings.ENVIRONMENT
     }
 
-@app.get("api/developer/{username}")
+@app.get("/api/developer/{username}")
 async def get_developer_metrics(username: str):
     try:
         data=await github_service.calculate_developer_analytics(username)
